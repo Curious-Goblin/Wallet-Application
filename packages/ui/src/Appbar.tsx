@@ -1,12 +1,12 @@
-import { SigningOptions } from "crypto";
 import { Button } from "./button";
 
 interface AppbarProps {
     user?: {
         name?: string | null;
     },
-    onSignin: () => Promise<void>,
-    onSignout: () => Promise<void>
+    // TODO: can u figure out what the type should be here?
+    onSignin: any,
+    onSignout: any
 }
 
 export const Appbar = ({
