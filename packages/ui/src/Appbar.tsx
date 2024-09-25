@@ -14,6 +14,9 @@ export const Appbar = ({
     onSignin,
     onSignout
 }: AppbarProps) => {
+    console.log("this before the log of user")
+    console.log(user)
+    console.log("this after the log of user")
     return <div className="flex justify-between border-b px-4">
         <div className="text-lg flex flex-col justify-center">
             PayTM
