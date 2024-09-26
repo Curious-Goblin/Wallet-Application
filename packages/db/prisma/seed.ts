@@ -1,13 +1,27 @@
 import { PrismaClient } from '@prisma/client'
+import bcrypt from "bcrypt";
+
 const prisma = new PrismaClient()
 
 async function main() {
+  const hashedPasswordAlice = await bcrypt.hash('alice', 10);
+  console.log(hashedPasswordAlice);
+  const hashedPasswordBob = await bcrypt.hash('bob', 10);
+  console.log(hashedPasswordBob);
+
   const alice = await prisma.user.upsert({
     where: { number: '9999999999' },
-    update: {},
+    update: {
+      Balance: {
+        create: {
+          amount: 20000,
+          locked: 0
+        }
+      }
+    },
     create: {
       number: '9999999999',
-      password: 'alice',
+      password: hashedPasswordAlice,
       name: 'alice',
       OnRampTransaction: {
         create: {
@@ -22,22 +36,29 @@ async function main() {
   })
   const bob = await prisma.user.upsert({
     where: { number: '9999999998' },
-    update: {},
-    create: {
-      number: '9999999998',
-      password: 'bob',
-      name: 'bob',
-      OnRampTransaction: {
+    update: {
+      Balance: {
         create: {
-          startTime: new Date(),
-          status: "Failure",
           amount: 2000,
-          token: "123",
-          provider: "HDFC Bank",
+          locked: 0
+        }
+      }
+    },
+      create: {
+        number: '9999999998',
+        password: hashedPasswordBob,
+        name: 'bob',
+        OnRampTransaction: {
+          create: {
+            startTime: new Date(),
+            status: "Failure",
+            amount: 2000,
+            token: "123",
+            provider: "HDFC Bank",
+          },
         },
       },
-    },
-  })
+    })
   console.log({ alice, bob })
 }
 main()
